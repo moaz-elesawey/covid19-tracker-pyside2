@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>Quick Start - Leaflet</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<style>
+		html, body{
+			height: 98%;
+		}
+
+		#mapid{
+			height: 100%
+		}
+
+	</style>
+	
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+</head>
+<body>
+
+
+
+<div id="mapid" style="width: 100%;"></div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+	let countries_cases = [];
+	var mymap = L.map('mapid', {attributionControl:false }).setView([30.505, 30.09], 4);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 8,
+		minZoom: 3,
+		attribution: '',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+
+	axios.get('https://disease.sh/v3/covid-19/countries', {
+          headers : { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+           }
+         })
+		.then(res => {
+				console.log(res.data);
+
+				res.data.map((country_case) => {
+					let case_ = country_case.cases;
+						if(case_ >= 500000){
+								case_ = case_ / 13
+							}
+						else if(case_ <= 1000){
+								case_ = case_ * 100
+							}
+					L.circle([country_case['countryInfo']['lat'], country_case['countryInfo']['long']], {
+						color: 'red',
+						fillColor: '#f03',
+						fillOpacity: 0.4,
+						radius: case_
+					}).addTo(mymap);
+				})
+
+
+				console.log(countries_cases);
+			})
+
+
+</script>
+
+</body>
+</html>
+
