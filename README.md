@@ -1,3 +1,3 @@
-# covid19-tracker-pyside2
+# COVID-19 TRACKER
 
-![alt text](./screenshot.png)
+![alt text](./public/screenshot.png)

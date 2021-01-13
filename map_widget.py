@@ -15,7 +15,7 @@ class Map(QWidget):
         self._layout.setContentsMargins(0,0,0,0)
 
 
-        with open('./map.html', 'r') as f:
+        with open('./public/map.html', 'r') as f:
             self.map_view.setHtml(f.read())
 
         self._layout.addWidget(self.map_view)
