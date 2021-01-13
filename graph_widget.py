@@ -32,12 +32,12 @@ class Graph(QtWidgets.QWidget):
         self.graphWidget.setBackground('#f7f7f7')
         self.graphWidget.showGrid(x=True, y=False)
         #Set Range
-        #self.graphWidget.setXRange(0, 10, padding=0)
-        #self.graphWidget.setYRange(20, 55, padding=0)
+        self.graphWidget.setYRange(min(self._cases)-6000, max(self._cases)+6000, padding=0)
+        #self.graphWidget.setYXRange(20, 55, padding=0)
 
-        pen = pg.mkPen(color=(255, 0, 0), width=3)
+        pen = pg.mkPen(color=(255, 0, 0), width=4)
         self.graphWidget.setAxisItems({'bottom': self.date_axis, 'left': self.cases_axis})
-        self.graphWidget.plot(self._days, self._cases, fillLevel=0, brush=(200,50,50,100), name="Sensor 1",  pen=pen)
+        self.graphWidget.plot(self._days, self._cases, fillLevel=min(self._cases)-1000000, brush=(200,50,50,100),  pen=pen)
         self.setLayout(self._layout)
 
         self.setStyleSheet(u'border:none')
@@ -54,7 +54,7 @@ class Graph(QtWidgets.QWidget):
 
         i = 0
 
-        _res = requests.get('https://disease.sh/v3/covid-19/historical/all?lastdays=120')
+        _res = requests.get('https://disease.sh/v3/covid-19/historical/all?lastdays=60')
 
         _cases = _res.json()['cases']
         _recovered = _res.json()['recovered']
