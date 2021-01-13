@@ -3,6 +3,10 @@ from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 import sys  # We need sys so that we can pass argv to QApplication
 import os
+import requests
+import time
+import datetime
+
 
 pg.setConfigOption('foreground', 'k')
 
@@ -11,35 +15,61 @@ class Graph(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         super(Graph, self).__init__(*args, **kwargs)
 
+        self._days, (self._cases, self._recovered, self._deaths) = self.create_data()
+
         self.graphWidget = pg.PlotWidget()
+
+        self.date_axis = pg.DateAxisItem()
+        self.date_axis.setGrid(True)
+        self.cases_axis = pg.AxisItem(orientation='left')
+
         self._layout = QtWidgets.QVBoxLayout()
         self._layout.setContentsMargins(5,5,5,5)
 
         self._layout.addWidget(self.graphWidget)
 
-        hour = [1,2,3,4,5,6,7,8,9,10]
-        temperature = [30,32,34,32,33,31,29,32,35,45]
-
         #Add Background colour to white
         self.graphWidget.setBackground('#f7f7f7')
-        # self.graphWidget.setForground('b')
-        # Add Axis Labels
-        # styles = {"color": "#000", "font-size": "15px"}
-        # self.graphWidget.setLabel("left", "Cases", **styles)
-        # self.graphWidget.setLabel("bottom", "Days", **styles)
-        #Add grid
-        self.graphWidget.showGrid(x=False, y=False)
+        self.graphWidget.showGrid(x=True, y=False)
         #Set Range
-        self.graphWidget.setXRange(0, 10, padding=0)
-        self.graphWidget.setYRange(20, 55, padding=0)
+        #self.graphWidget.setXRange(0, 10, padding=0)
+        #self.graphWidget.setYRange(20, 55, padding=0)
 
         pen = pg.mkPen(color=(255, 0, 0), width=3)
-        self.graphWidget.plot(hour, temperature, name="Sensor 1",  pen=pen, symbol='o', symbolSize=7, symbolBrush=('b'))
-
+        self.graphWidget.setAxisItems({'bottom': self.date_axis, 'left': self.cases_axis})
+        self.graphWidget.plot(self._days, self._cases, fillLevel=0, brush=(200,50,50,100), name="Sensor 1",  pen=pen)
         self.setLayout(self._layout)
 
         self.setStyleSheet(u'border:none')
 
+
+    @staticmethod
+    def create_data():
+        _x_days = []
+
+        _y_cases = []
+        _y_recovered = []
+        _y_deaths = []
+
+
+        i = 0
+
+        _res = requests.get('https://disease.sh/v3/covid-19/historical/all?lastdays=120')
+
+        _cases = _res.json()['cases']
+        _recovered = _res.json()['recovered']
+        _deaths = _res.json()['deaths']
+
+        for (c_k, c_v), (r_k, r_v), (d_k, d_v) in zip(_cases.items(), _recovered.items(), _deaths.items()):
+            _x_days.append(time.mktime(datetime.datetime.strptime(c_k, "%m/%d/%y").timetuple()))
+
+            _y_cases.append(int(c_v))
+            _y_recovered.append(int(r_v))
+            _y_deaths.append(int(d_v))
+
+            i += 1
+
+        return [_x_days, (_y_cases, _y_recovered, _y_deaths)]
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
