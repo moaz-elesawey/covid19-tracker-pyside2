@@ -6,7 +6,7 @@ import os
 import requests
 import time
 import datetime
-
+import json
 
 pg.setConfigOption('foreground', 'k')
 
@@ -53,23 +53,30 @@ class Graph(QtWidgets.QWidget):
 
 
         i = 0
+        try:
+            _res = requests.get('https://disease.sh/v3/covid-19/historical/all?lastdays=60')
 
-        _res = requests.get('https://disease.sh/v3/covid-19/historical/all?lastdays=60')
+            _cases = _res.json()['cases']
+            _recovered = _res.json()['recovered']
+            _deaths = _res.json()['deaths']
 
-        _cases = _res.json()['cases']
-        _recovered = _res.json()['recovered']
-        _deaths = _res.json()['deaths']
+            for (c_k, c_v), (r_k, r_v), (d_k, d_v) in zip(_cases.items(), _recovered.items(), _deaths.items()):
+                _x_days.append(time.mktime(datetime.datetime.strptime(c_k, "%m/%d/%y").timetuple()))
 
-        for (c_k, c_v), (r_k, r_v), (d_k, d_v) in zip(_cases.items(), _recovered.items(), _deaths.items()):
-            _x_days.append(time.mktime(datetime.datetime.strptime(c_k, "%m/%d/%y").timetuple()))
+                _y_cases.append(int(c_v))
+                _y_recovered.append(int(r_v))
+                _y_deaths.append(int(d_v))
 
-            _y_cases.append(int(c_v))
-            _y_recovered.append(int(r_v))
-            _y_deaths.append(int(d_v))
+                i += 1
 
-            i += 1
+            with open('./local/_historical_data.json', 'w') as f:
+                f.write(json.dumps([_x_days, (_y_cases, _y_recovered, _y_deaths)]))
 
-        return [_x_days, (_y_cases, _y_recovered, _y_deaths)]
+            return [_x_days, (_y_cases, _y_recovered, _y_deaths)]
+
+        except:
+            with open('./local/_historical_data.json') as f:
+                return json.loads(f.read())
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
