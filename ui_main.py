@@ -73,7 +73,7 @@ class Ui_MainWindow(object):
         self.countries_select.setSizePolicy(sizePolicy)
         self.countries_select.setMinimumSize(QSize(120, 0))
         self.countries_select.setMaximumSize(QSize(16777215, 40))
-        self.countries_select.setStyleSheet(u"color: rgb(1,1,1)")
+        self.countries_select.setStyleSheet(u"border: 1px solid;border-radius: 4px;color: rgb(1,1,1);QComboBox::down-arrow {image: url('./style/rc/arrow_down_disabled.png');height: 8px;width: 8px;}")
 
         self.horizontalLayout_2.addWidget(self.countries_select)
 
