@@ -2,9 +2,9 @@
 
 
 ## Screenshot
-![alt text](./public/screenshot.png)
+![screenshot](./public/screenshot.png)
 
 
 ## Demo
-![caption](./public/screenshot.mp4)
+[![demo video](./public/screenshot.png)](./public/screenshot.mp4)
 
