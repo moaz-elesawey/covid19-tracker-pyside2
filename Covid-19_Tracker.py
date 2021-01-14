@@ -20,6 +20,7 @@ class MainWindow(QMainWindow):
         super().__init__(*a, **kw)
 
         self.setWindowIcon(QIcon('./icons/window_icon.png'))
+        self.setWindowTitle('COVID-19 TRACKER')
 
         self.ui = Ui_MainWindow()
 
@@ -49,7 +50,7 @@ class MainWindow(QMainWindow):
         # creating the schedualer
         self .__timer = QTimer()
         self.__timer.timeout.connect(self.refresh_data)
-        self.__timer.start(1000*60*1)
+        self.__timer.start(1000*60*5)
 
         self.show()
 

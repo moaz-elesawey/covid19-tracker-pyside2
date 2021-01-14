@@ -390,7 +390,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"COVID-19 TRACKER", None))
         self.header_title.setText(QCoreApplication.translate("MainWindow", u"COVID-19 TRACKER", None))
         self.covid_cases.setText(QCoreApplication.translate("MainWindow", u"COVID CASES", None))
         self.covid_cases_inc.setText(QCoreApplication.translate("MainWindow", u"+105.6k", None))
