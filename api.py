@@ -1,7 +1,7 @@
 ## url => https://disease.sh/v3/covid-19/countries
 import requests
 from pprint import pprint
-import json
+import pickle
 
 
 URL = 'https://disease.sh/v3/covid-19/countries'
@@ -29,16 +29,17 @@ def get_countries_data(url=URL):
         _countries_data = _res.json()
         _modified_country_data = list(map(_make_our_data, _countries_data))
 
-        with open('./local/_countries_data.json', 'w') as f:
-            f.write(json.dumps(_modified_country_data))
-
         _modified_country_data.insert(0, _all_data)
+
+        with open('./local/_countries_data.pkl', 'wb') as f:
+            pickle.dump(_modified_country_data, f)
+
         return _modified_country_data
 
     except:
         print('[INFO] load local...')
-        with open('./local/_countries_data.json', 'r') as f:
-            return json.loads(f.read())
+        with open('./local/_countries_data.pkl', 'rb') as f:
+            return pickle.load(f)
 
 def _make_our_data(n):
     _data = {

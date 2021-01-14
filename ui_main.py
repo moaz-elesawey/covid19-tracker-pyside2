@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(810, 590)
+        MainWindow.resize(950, 650)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -52,17 +52,18 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.header_title = QLabel(self.frame_7)
+        self.header_title = QPushButton(self.frame_7)
+        self.header_title.setStyleSheet('border: none; color: rgb(255,0,0);text-align: left')
+        self.header_title.setCursor(QCursor(Qt.PointingHandCursor))
         self.header_title.setObjectName(u"header_title")
         font = QFont()
         font.setPointSize(16)
         font.setBold(True)
         font.setWeight(75)
         self.header_title.setFont(font)
-        self.header_title.setStyleSheet(u"color: rgb(254, 0, 0);")
-        self.header_title.setIndent(10)
+        #self.header_title.setIndent(10)
 
-        self.horizontalLayout_2.addWidget(self.header_title)
+        self.horizontalLayout_2.addWidget(self.header_title, 0, Qt.AlignLeft)
 
         self.countries_select = QComboBox(self.frame_7)
         self.countries_select.setObjectName(u"countries_select")

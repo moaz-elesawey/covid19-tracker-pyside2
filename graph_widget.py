@@ -6,7 +6,7 @@ import os
 import requests
 import time
 import datetime
-import json
+import pickle
 
 pg.setConfigOption('foreground', 'k')
 
@@ -69,14 +69,14 @@ class Graph(QtWidgets.QWidget):
 
                 i += 1
 
-            with open('./local/_historical_data.json', 'w') as f:
-                f.write(json.dumps([_x_days, (_y_cases, _y_recovered, _y_deaths)]))
+            with open('./local/_historical_data.pkl', 'wb') as f:
+                pickle.dump([_x_days, (_y_cases, _y_recovered, _y_deaths)], f)
 
             return [_x_days, (_y_cases, _y_recovered, _y_deaths)]
 
         except:
-            with open('./local/_historical_data.json') as f:
-                return json.loads(f.read())
+            with open('./local/_historical_data.pkl', 'rb') as f:
+                return pickle.load(f)
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
